@@ -7,6 +7,7 @@ const morgan = require("morgan");
  */
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 /* DB config */
@@ -24,6 +25,7 @@ app.use(morgan("dev"));
 /**
  * * Routes
  */
+app.use("/", require("./routes/home.routes"));
 app.use("/api/auth", require("./routes/api/users.routes"));
 /**
  * * Start server
