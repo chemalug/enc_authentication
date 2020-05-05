@@ -1,3 +1,4 @@
+const functions = require("firebase-functions");
 const serverless = require("serverless-http");
 const express = require("express");
 const mongoose = require("mongoose");
@@ -33,4 +34,5 @@ app.use("/api/auth", require("./routes/api/users.routes"));
 app.listen(PORT, () => {
   console.log(`Server run on PORT ${PORT}`);
 });
-module.exports.handler = serverless(app);
+//module.exports.handler = serverless(app);
+exports.app = functions.https.onRequest(app);
