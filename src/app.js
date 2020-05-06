@@ -2,14 +2,17 @@ const serverless = require("serverless-http");
 const express = require("express");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
+const cors = require("cors");
 /**
  * * Settings
  */
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(cors());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
 /* DB config */
 const db = require("./config/keys").mongoURI;
 /* DB connected */
