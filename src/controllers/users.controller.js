@@ -55,6 +55,8 @@ userCtrl.login = async (req, res, next) => {
     const payload = {
       id: existUser.id,
       name: existUser.name,
+      email: existUser.email,
+      role: existUser.role,
     };
     jwt.sign(
       payload,
@@ -65,6 +67,7 @@ userCtrl.login = async (req, res, next) => {
       (err, token) => {
         res.json({
           success: true,
+          enc_user: payload,
           token: "Bearer " + token,
         });
       }
