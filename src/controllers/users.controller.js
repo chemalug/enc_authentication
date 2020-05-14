@@ -77,12 +77,23 @@ userCtrl.login = async (req, res, next) => {
   }
 };
 
-userCtrl.getAll = async (req, res, next) => {
-  const users = await User.find();
-  return res.status(400).json(users);
+userCtrl.findAll = async (req, res, next) => {
+  const params = req.params || {};
+  const query = req.query || {};
+
+  const page = parseInt(query.page, 10) || 0;
+  const perPage = parseInt(query.per_page, 10) || 10;
+
+  User.find()
+    .select("id name email created")
+    .limit(perPage)
+    .skip(page * perPage)
+
+    .then((users) => res.status(400).json(users))
+    .catch((err) => res.status(500).json(err.errors));
 };
 
-userCtrl.insert = async (req, res, next) => {
+userCtrl.create = async (req, res, next) => {
   const { errors, isValid } = validateRegisterInput(req.body);
   if (!isValid) {
     return res.status(400).json(errors);
@@ -105,8 +116,27 @@ userCtrl.insert = async (req, res, next) => {
   });
 };
 
-userCtrl.getById = (req, res, next) => {
+userCtrl.findById = (req, res, next) => {
   User.findById(req.params.id)
+    .then((user) => {
+      if (!user) {
+        res
+          .status(404)
+          .send({ message: "User not found with id " + req.params.id });
+      } else {
+        res.status(400).json({ user });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "User not found with id " + req.params.id,
+      });
+    });
+};
+
+userCtrl.findOne = (req, res, next) => {
+  const argument = req.body;
+  User.findOne(argument)
     .then((user) => {
       if (!user) {
         res
